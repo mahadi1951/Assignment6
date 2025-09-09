@@ -48,7 +48,7 @@ function highlightCategory(selected) {
   selected.classList.add('bg-green-700', 'text-white');
 }
 
-// ----------------- Load Plants -----------------
+// --- Load Plants ---
 async function loadAllPlants() {
   try {
     showLoader();
@@ -77,7 +77,7 @@ async function loadPlantsByCategory(id) {
   }
 }
 
-// ----------------- Render Cards -----------------
+//--- Render Cards---
 function renderPlants(plants) {
   cardContainer.innerHTML = '';
   if (!plants || plants.length === 0) {
@@ -99,7 +99,7 @@ function renderPlants(plants) {
         <p class="bg-[#dcfce7] px-4 py-1 rounded-2xl text-green-700">${plantCategory}</p>
         <p class="font-semibold text-green-700">৳ ${plant.price}</p>
       </div>
-      <button class="mt-3 bg-[#15803d] hover:bg-amber-700 text-white py-1 px-14 rounded-2xl add-to-cart">
+      <button class="mt-3 bg-[#15803d] hover:bg-green-500 text-white py-1 px-14 rounded-2xl add-to-cart">
         Add to Cart
       </button>
     `;
@@ -117,7 +117,7 @@ function renderPlants(plants) {
   });
 }
 
-// ----------------- Modal -----------------
+// --- Modal ---
 async function openPlantModal(id) {
   try {
     const res = await fetch(`https://openapi.programming-hero.com/api/plant/${id}`);
@@ -139,7 +139,7 @@ async function openPlantModal(id) {
   }
 }
 
-// ----------------- Cart Functions -----------------
+// --- Cart Functions ---
 function addToCart(plant) {
   const cartItemsList = document.getElementById('cart-items');
   if (cartItems.includes(plant.id)) return;
@@ -163,7 +163,7 @@ function addToCart(plant) {
 }
 
 
-// Cart
+// ----Cart---
 const cartContainer = document.createElement('div');
 
 cartContainer.innerHTML = `
@@ -234,6 +234,6 @@ function hideLoader() {
 }
 
 
-// ----------------- Initial Load -----------------
+// --- Initial Load---
 loadCategories();
 loadAllPlants();
