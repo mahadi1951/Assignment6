@@ -1,58 +1,6 @@
 // ----------------- DOM Elements -----------------
 const categoriesContainer = document.getElementById('categories-container');
 const cardContainer = document.getElementById('card-container');
-const loader = document.createElement('div');
-loader.className = 'col-span-5 flex justify-center items-center py-10 hidden';
-loader.innerHTML = `
-  <div class="flex space-x-2">
-    <div class="w-3 h-3 bg-black rounded-full animate-bounce"></div>
-    <div class="w-3 h-3 bg-black rounded-full animate-bounce delay-200"></div>
-    <div class="w-3 h-3 bg-black rounded-full animate-bounce delay-400"></div>
-  </div>
-`;
-cardContainer.parentElement.insertBefore(loader, cardContainer);
-
-// Cart
-const cartContainer = document.createElement('div');
-cartContainer.innerHTML = `
-  <ul id="cart-items" class="space-y-2"></ul>
-  <p id="total-price" class="mt-2 font-semibold  text-green-700"></p>
-`;
-document.querySelector('.right-card-value').appendChild(cartContainer);
-
-let categoryMap = {};
-let totalPrice = 0;
-let cartItems = [];
-
-// -- Modal --
-const modal = document.createElement('div');
-modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50';
-modal.innerHTML = `
-  <div class="bg-white p-6 rounded-lg w-11/12 max-w-lg relative">
-  <div id="modalContent"></div>
-  <button 
-    id="closeModal" 
-    class="absolute bottom-3 right-3 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition">
-    Close
-  </button>
-</div>
-`;
-document.body.appendChild(modal);
-
-const modalContent = modal.querySelector('#modalContent');
-const closeModal = modal.querySelector('#closeModal');
-closeModal.addEventListener('click', () => modal.classList.add('hidden'));
-
-// -- Loader Functions --
-function showLoader() {
-  loader.classList.remove('hidden');
-  cardContainer.classList.add('hidden');
-}
-
-function hideLoader() {
-  loader.classList.add('hidden');
-  cardContainer.classList.remove('hidden');
-}
 
 // ----------------- Load Categories -----------------
 async function loadCategories() {
@@ -139,15 +87,15 @@ function renderPlants(plants) {
 
   plants.forEach(plant => {
     const div = document.createElement('div');
-    div.className = 'bg-white rounded-xl shadow-md p-4 flex flex-col items-center';
+    div.className = 'bg-white rounded-xl shadow-md p-4 flex flex-col ';
 
     const plantCategory = plant.category || categoryMap[plant.category_id] || 'Unknown';
 
     div.innerHTML = `
       <img class="w-60 h-40 object-cover rounded-lg cursor-pointer" src="${plant.image}" alt="${plant.name}" />
-      <h3 class="mt-2 font-semibold text-lg text-center cursor-pointer">${plant.name}</h3>
-      <p class="mt-1 text-gray-500 text-center text-sm">${plant.description.slice(0, 60)}...</p>
-      <div class="mt-2 w-full flex justify-between items-center px-2">
+      <h3 class="mt-2 font-semibold text-lg cursor-pointer">${plant.name}</h3>
+      <p class="mt-1 text-gray-500  text-sm">${plant.description.slice(0, 60)}...</p>
+      <div class="mt-2 w-full flex justify-between items-center ">
         <p class="bg-[#dcfce7] px-4 py-1 rounded-2xl text-green-700">${plantCategory}</p>
         <p class="font-semibold text-green-700">৳ ${plant.price}</p>
       </div>
@@ -160,12 +108,12 @@ function renderPlants(plants) {
     // Add to Cart button
     div.querySelector('.add-to-cart').addEventListener('click', () => {
       addToCart(plant);
-      alert(`${plant.name} added to cart!`);
+      alert(`${plant.name} has been added to cart!`);
     });
 
     // Open Modal when name or image clicked
     div.querySelector('h3').addEventListener('click', () => openPlantModal(plant.id));
-    div.querySelector('img').addEventListener('click', () => openPlantModal(plant.id));
+    
   });
 }
 
@@ -200,9 +148,12 @@ function addToCart(plant) {
   totalPrice += plant.price;
 
   const li = document.createElement('li');
-  li.className = 'flex justify-between bg-white p-2 rounded shadow';
-  li.innerHTML = `
-    <span>${plant.name} ৳ ${plant.price}</span>
+  li.className = 'flex justify-between bg-[#f0fdf4] p-2 rounded-md shadow m-2';
+   li.innerHTML = `
+    <div class="flex flex-col text-left">
+      <span class="font-semibold">${plant.name}</span>
+      <span class="text-green-700">৳ ${plant.price}</span>
+    </div>
     <button class="remove-cart text-red-500 font-bold ml-2">❌</button>
   `;
   cartItemsList.appendChild(li);
@@ -210,6 +161,21 @@ function addToCart(plant) {
   li.querySelector('.remove-cart').addEventListener('click', () => removeFromCart(li, plant));
   updateTotal();
 }
+
+
+// Cart
+const cartContainer = document.createElement('div');
+
+cartContainer.innerHTML = `
+  <ul id="cart-items" class="space-y-2"></ul>
+  <p id="total-price" class="mt-2 font-semibold text-right mr-3 text-green-700"></p>
+`;
+document.querySelector('.right-card-value').appendChild(cartContainer);
+
+let categoryMap = {};
+let totalPrice = 0;
+let cartItems = [];
+
 
 function removeFromCart(li, plant) {
   li.remove();
@@ -221,6 +187,52 @@ function removeFromCart(li, plant) {
 function updateTotal() {
   document.getElementById('total-price').textContent = `Total: ৳ ${totalPrice}`;
 }
+
+
+const loader = document.createElement('div');
+loader.className = 'col-span-5 flex justify-center items-center py-10 hidden';
+loader.innerHTML = `
+  <div class="flex space-x-2">
+    <div class="w-3 h-3 bg-black rounded-full animate-bounce"></div>
+    <div class="w-3 h-3 bg-black rounded-full animate-bounce delay-200"></div>
+    <div class="w-3 h-3 bg-black rounded-full animate-bounce delay-400"></div>
+  </div>
+`;
+cardContainer.parentElement.insertBefore(loader, cardContainer);
+
+// -- Modal --
+const modal = document.createElement('div');
+modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50';
+modal.innerHTML = `
+  <div class="bg-white p-6 rounded-lg w-11/12 max-w-lg relative">
+  <div id="modalContent"></div>
+  <button 
+    id="closeModal" 
+    class="absolute bottom-3 right-3 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-300 transition">
+    Close
+  </button>
+</div>
+`;
+document.body.appendChild(modal);
+
+const modalContent = modal.querySelector('#modalContent');
+const closeModal = modal.querySelector('#closeModal');
+closeModal.addEventListener('click', () => modal.classList.add('hidden'));
+
+// -- Loader Functions --
+function showLoader() {
+  cardContainer.innerHTML = `
+    <div class="flex justify-center items-center h-40 w-full">
+      <span class="loading loading-dots loading-xl"></span>
+    </div>
+  `;
+}
+
+function hideLoader() {
+  loader.classList.add('hidden');
+  cardContainer.classList.remove('hidden');
+}
+
 
 // ----------------- Initial Load -----------------
 loadCategories();
